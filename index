@@ -1,0 +1,203 @@
+# angular
+angular关于购物车的实现
+<!DOCTYPE html>
+<html  ng-app="myApp" ng-controller="myCtrl">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta content="telephone=no" name="format-detection" />
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <script src="http://apps.bdimg.com/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/angular.js/1.3.9/angular.min.js"></script>
+    <!-- <script src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>-->
+</head>
+<body>
+<div class="contain">
+    <div class="about_top">
+        <a class="back icon" href="##"></a>
+        <span>桐庐土菜馆</span>
+        <a class="home icon" href="index.html"></a>
+    </div>
+    <div class="announce">
+<span>公告：马云请客，周五半价，更有机会享受免单！</span>
+    </div>
+    <div class="menu">
+        <ul class="clearfix">
+          <!--  <li>
+                <div class="menu_list">
+                    <img src="images/menu.jpg"/>
+                    <div class="menu_list_s">
+                        <span>酸辣土豆丝</span>
+                        <span></span>
+                        <span>月售30份</span>
+                    </div>
+                </div>
+                <div class="add">
+                    <span ng-click="minus($index)">-</span>
+                    <span>{{count}}</span>
+                    <span ng-click="count = count + 1">+</span>
+                </div>
+            </li>-->
+ 
+            <li ng-repeat = "item in items">
+                <div class="menu_list">
+                    <img src="images/menu.jpg"/>
+                    <div class="menu_list_s item" >
+                        <span>{{item.name}}</span>
+                        <span>{{item.price*varlist.itemNum[$index]|currency:"￥"}}</span>
+                        <span>月售:{{item.sale}}</span>
+                    </div>
+                </div>
+                <div class="add">
+                    <span ng-click="minus($index)">-</span>
+                    <span>{{varlist.itemNum[$index]}}</span>
+                    <span ng-click="add($index)">+</span>
+                </div>
+            </li>
+
+          <!--  <li>
+                <div class="menu_list">
+                    <img src="images/menu.jpg"/>
+                    <div class="menu_list_s">
+                        <span>酸辣土豆丝</span>
+                        <span>￥{{12*count1}}</span>
+                        <span>月售30份</span>
+                    </div>
+                </div>
+                <div class="add">
+                    <span ng-click="Math.abs(count1=count1-1)">-</span>
+                    <span>{{count1}}</span>
+                    <span ng-click="count1 = count1 + 1">+</span>
+                </div>
+            </li>-->
+            <li class="count">
+                <span><i>小计</i><em>￥{{varlist.total|number:2}}</em></span>
+                <a href="##">加入购物车</a>
+            </li>
+        </ul>
+
+    </div>
+
+
+    <table class="tables" id="tables">
+        <tr class="table_tr">
+            <td>商家电话</td>
+            <td>0571-87136088</td>
+        </tr>
+        <tr class="table_tr">
+            <td>商家地址</td>
+            <td>杭州下沙路631号华东家居商城三楼A-C</td>
+        </tr>
+        <tr>
+            <td>订单管理</td>
+            <td>201511250950</td>
+        </tr>
+    </table>
+
+
+    <div class="nav_bottom">
+        <a href="about.html">
+            <i class="nav_icon gy1"></i>
+            <em>关于</em>
+        </a>
+        <a href="waimai.html">
+            <i class="nav_icon wm1"></i>
+            <em>外卖</em>
+        </a>
+        <a href="shopping.html">
+            <i class="nav_icon gw"></i>
+            <em>购物车</em>
+        </a>
+        <a href="querendingdan.html">
+            <i class="nav_icon dd"></i>
+            <em>订单</em>
+        </a>
+        <a href="myself.html">
+            <i class="nav_icon wd"></i>
+            <em>我的</em>
+        </a>
+    </div>
+   <!-- <script>
+        var app = angular.module('myApp', []);
+        app.controller('myCtrl', function($scope) {
+            $scope.count = 1;
+            $scope.counts = 1;
+            $scope.count1 = 1;
+            $scope.minus = function($index) {
+                if ($scope.varlist.itemNum[$index] == 0) {
+                    return;
+                } else {
+                    $scope.varlist.itemNum[$index]--;
+                    getTotal();
+                }
+            }
+        })
+    </script>-->
+    </div>
+<script type="text/javascript">
+    var app = angular.module("myApp", []);
+    app.controller("myCtrl", function($scope) {
+// 数据源
+        $scope.items = [{
+            "name": "酸辣土豆丝",
+            "price": 12,
+            "sale":"30份"
+        }, {
+            "name": "酸辣土豆丝",
+            "price": 12,
+            "sale":"30份"
+        }, {
+            "name": "酸辣土豆丝",
+            "price": 12,
+            "sale":"30份"
+        }, ];
+        var len = $scope.items.length;
+        var arr = [];
+// 循环为数组赋值
+        for (var i = 0; i < len; i++) {
+            arr[i] = 0;
+        }
+// 检测是否变化，为了总价能够改变
+        $scope.$watch("varlist.itemNum", function() {
+            getTotal();
+        }, true);
+// 定义变量
+        $scope.varlist = {
+            itemNum: arr,
+            total: 0
+        }
+// 购物的时候操作
+        $scope.buy = function($index) {
+            $scope.varlist.itemNum[$index]++;
+            getTotal();
+        }
+// -----
+        $scope.minus = function($index) {
+            if ($scope.varlist.itemNum[$index] == 0) {
+                return;
+            } else {
+                $scope.varlist.itemNum[$index]--;
+                getTotal();
+            }
+        }
+// ++++
+        $scope.add = function($index) {
+            $scope.varlist.itemNum[$index]++;
+            getTotal();
+        }
+// 计算总价
+        var getTotal = function($index) {
+            $scope.varlist.total = 0;
+            for (var j = 0; j < len; j++) {
+                $scope.varlist.total = $scope.varlist.total + $scope.varlist.itemNum[j] * $scope.items[j].price;
+            }
+            return $scope.varlist.total;
+        }
+    });
+</script>
+<script src="js/js.js"></script>
+</body>
+</html>
