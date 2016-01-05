@@ -214,6 +214,5 @@ angular关于购物车的实现
         }
     });
 </script>
-<script src="js/js.js"></script>
 </body>
 </html>
